@@ -1,5 +1,5 @@
 export type ElementKind = 'booth' | 'stage' | 'seating' | 'entrance';
-export type LayoutMode = 'edit' | 'inspect' | 'path';
+export type LayoutMode = 'edit' | 'inspect' | 'path' | 'access';
 export type ViewPhase = 'loading' | 'ready' | 'error';
 
 export interface ExpoElement {
@@ -65,11 +65,35 @@ export interface PathPreview {
   toName: string;
 }
 
+export interface RoutePoint {
+  x: number;
+  y: number;
+}
+
+export interface AccessRoute {
+  entranceId: string;
+  entranceName: string;
+  targetId: string;
+  targetName: string;
+  reachable: boolean;
+  points: RoutePoint[];
+  distance: number | null;
+  minClearWidth: number | null;
+  narrowSpans: RoutePoint[][];
+}
+
+export interface AccessEvaluation {
+  routes: AccessRoute[];
+  missingEntrance: boolean;
+  missingTarget: boolean;
+}
+
 export interface Analysis {
   overlaps: OverlapIssue[];
   bounds: BoundsIssue[];
   channels: ChannelIssue[];
   path: PathPreview | null;
+  access: AccessEvaluation;
 }
 
 export interface Notice {

@@ -58,7 +58,7 @@ export class ExpoSketchViewModel {
 
   selectElement(id: string) { this.commit({ selectedId: id }); }
 
-  setMode(mode: LayoutMode) { this.commit({ mode, notice: { tone: 'info', message: mode === 'inspect' ? '检查模式已开启：拖动元素查看即时提示' : mode === 'path' ? '路径模式已开启：入口到重点区域的访问路线已生成' : '编辑模式已开启' } }); }
+  setMode(mode: LayoutMode) { this.commit({ mode, notice: { tone: 'info', message: mode === 'inspect' ? '检查模式已开启：拖动元素查看即时提示' : mode === 'path' ? '路径模式已开启：入口到重点区域的访问路线已生成' : mode === 'access' ? '通行评估已开启：每个入口的绕行路线与沿途净宽已重新计算' : '编辑模式已开启' } }); }
 
   addElement(kind: ElementKind) {
     const element = createElement(kind, this.stateValue.document.elements.length, this.stateValue.document.field);

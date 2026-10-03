@@ -27,6 +27,16 @@ describe('ExpoSketchViewModel', () => {
     expect(vm.state.analysis.overlaps.length).toBeGreaterThan(0);
   });
 
+  it('recomputes access routes when an element moves', () => {
+    const vm = new ExpoSketchViewModel(fakeRepository());
+    const before = vm.state.analysis.access.routes[0];
+    expect(before.reachable).toBe(true);
+    vm.moveElement('booth-1', 5, 6.5);
+    const after = vm.state.analysis.access.routes[0];
+    expect(after.reachable).toBe(true);
+    expect(after.distance).not.toBe(before.distance);
+  });
+
   it('recovers the example if repository loading fails', async () => {
     const repository: LayoutRepository = { load: vi.fn(async () => { throw new Error('bad storage'); }), save: vi.fn(async () => {}) };
     const vm = new ExpoSketchViewModel(repository);
