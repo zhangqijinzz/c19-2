@@ -51,4 +51,29 @@ describe('ExpoSketchViewModel', () => {
     vm.resizeSelected(0, 0);
     expect(vm.state.document.elements[0].width).toBe(before);
   });
+
+  it('recomputes entrance access routes and clearances after an element is dragged', () => {
+    const vm = new ExpoSketchViewModel(fakeRepository());
+    const before = vm.state.analysis.access;
+    expect(before.routes.length).toBeGreaterThan(0);
+    const firstLength = before.routes[0].distance;
+    // 把展位拖到入口与主舞台之间的直线路径上，直线被挡住、路线必须绕行
+    vm.moveElement('booth-1', 5, 4.8);
+    const after = vm.state.analysis.access;
+    expect(after.routes[0].reachable).toBe(true);
+    expect(after.routes[0].distance).not.toBe(firstLength);
+    expect(after.routes[0].segments.length).toBeGreaterThan(0);
+  });
+
+  it('explains what is missing for the access assessment', async () => {
+    const vm = new ExpoSketchViewModel(fakeRepository({
+      version: 1,
+      title: 'empty',
+      field: { width: 20, height: 12 },
+      elements: [{ id: 'only-booth', kind: 'booth', name: '孤展位', x: 8, y: 4, width: 4, height: 3, rotation: 0 }],
+    }));
+    await vm.initialize();
+    expect(vm.state.analysis.access.routes).toEqual([]);
+    expect(vm.state.analysis.access.missing).toContain('入口');
+  });
 });
